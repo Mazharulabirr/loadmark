@@ -407,7 +407,8 @@
   @media(max-width:680px){
     .nav-links{display:none}
     .nav-cta .btn-ghost{display:none}
-    .menu-btn{display:grid;place-items:center}
+    .menu-btn{display:none}
+    body{padding-bottom:calc(66px + env(safe-area-inset-bottom))}
     .brand{font-size:19px;gap:9px}
     .brand small{display:none}
     .brand .mark{width:30px;height:30px}
@@ -452,6 +453,40 @@
   .mobile-menu a{font-family:'Space Grotesk';font-size:26px;font-weight:600;padding:14px 0;border-bottom:1px solid var(--line)}
   .mobile-menu .btn{margin-top:24px;justify-content:center}
   .mm-close{position:absolute;top:26px;right:26px;background:none;border:none;color:#fff;cursor:pointer}
+
+  /* ---------- App-style bottom tab bar (mobile) ---------- */
+  .bottom-nav{display:none}
+  @media(max-width:680px){
+    .bottom-nav{
+      display:grid;grid-template-columns:repeat(5,1fr);align-items:end;
+      position:fixed;left:0;right:0;bottom:0;z-index:70;
+      background:rgba(8,13,17,.82);backdrop-filter:blur(22px) saturate(1.5);
+      -webkit-backdrop-filter:blur(22px) saturate(1.5);
+      border-top:1px solid var(--line);
+      padding:9px 8px calc(9px + env(safe-area-inset-bottom));
+      box-shadow:0 -10px 34px -14px rgba(0,0,0,.7);
+    }
+    .bottom-nav a,.bottom-nav button{
+      -webkit-tap-highlight-color:transparent;
+      background:none;border:none;cursor:pointer;text-decoration:none;
+      display:flex;flex-direction:column;align-items:center;gap:5px;
+      font-family:'Inter';font-size:10.5px;font-weight:500;letter-spacing:.005em;
+      color:var(--muted-2);padding:5px 2px 3px;transition:color .25s var(--ease);
+    }
+    .bottom-nav svg{width:22px;height:22px;transition:transform .22s var(--ease)}
+    .bottom-nav a:active svg,.bottom-nav button:active svg{transform:scale(.86)}
+    .bottom-nav .active{color:var(--teal)}
+    .bottom-nav .active svg{filter:drop-shadow(0 0 8px rgba(24,214,196,.55))}
+    .bottom-nav .bn-cta{color:var(--teal)}
+    .bottom-nav .bn-cta .bn-ic{
+      display:grid;place-items:center;width:38px;height:38px;margin-top:-16px;
+      background:var(--teal);border-radius:13px;color:#04080b;
+      box-shadow:0 8px 20px -5px rgba(24,214,196,.7);
+    }
+    .bottom-nav .bn-cta .bn-ic svg{width:20px;height:20px}
+  }
+  :root[data-theme="light"] .bottom-nav{background:rgba(247,250,249,.9);border-top-color:rgba(2,40,38,.1)}
+  :root[data-theme="light"] .bottom-nav .bn-cta .bn-ic{color:#f7faf9}
 
   /* ---------- Theme toggle ---------- */
   .theme-btn{
@@ -680,6 +715,30 @@
   <a href="#" class="js-signin">Sign in</a>
   <a href="#cta" class="btn btn-primary">Get started</a>
 </div>
+
+<!-- app-style bottom tab bar (mobile) -->
+<nav class="bottom-nav" aria-label="Mobile navigation">
+  <a href="#" data-home class="active" aria-label="Home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/></svg>
+    <span>Home</span>
+  </a>
+  <a href="#platform" data-spy="#platform" aria-label="Platform">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 21 8l-9 5-9-5 9-5Z"/><path d="M3 12l9 5 9-5"/><path d="M3 16l9 5 9-5"/></svg>
+    <span>Platform</span>
+  </a>
+  <a href="#cta" class="bn-cta" aria-label="Get started">
+    <span class="bn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <span>Start</span>
+  </a>
+  <a href="#services" data-spy="#services" aria-label="Solutions">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"/></svg>
+    <span>Solutions</span>
+  </a>
+  <button type="button" id="bnMenu" aria-label="Open menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    <span>Menu</span>
+  </button>
+</nav>
 
 <main>
 <!-- ============ HERO ============ -->
@@ -1107,6 +1166,16 @@
   document.getElementById('menuBtn').onclick=()=>mm.classList.add('open');
   document.getElementById('mmClose').onclick=()=>mm.classList.remove('open');
   mm.querySelectorAll('a').forEach(a=>a.onclick=()=>mm.classList.remove('open'));
+
+  // app-style bottom nav
+  document.getElementById('bnMenu').onclick=()=>mm.classList.add('open');
+  const bnLinks=[...document.querySelectorAll('.bottom-nav a')];
+  const bnHome=document.querySelector('.bottom-nav a[data-home]');
+  const spyMap={};bnLinks.forEach(a=>{const s=a.getAttribute('data-spy');if(s)spyMap[s.slice(1)]=a;});
+  const setActive=el=>{bnLinks.forEach(l=>l.classList.remove('active'));if(el)el.classList.add('active');};
+  const spyObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const a=spyMap[e.target.id];if(a)setActive(a);}});},{rootMargin:'-45% 0px -50% 0px'});
+  Object.keys(spyMap).forEach(id=>{const el=document.getElementById(id);if(el)spyObs.observe(el);});
+  window.addEventListener('scroll',()=>{if(window.scrollY<320)setActive(bnHome);},{passive:true});
 
   // sign-in modal
   const modal=document.getElementById('signinModal');
