@@ -454,58 +454,46 @@
   .mobile-menu .btn{margin-top:24px;justify-content:center}
   .mm-close{position:absolute;top:26px;right:26px;background:none;border:none;color:#fff;cursor:pointer}
 
-  /* ---------- App-style bottom tab bar (mobile) ---------- */
+  /* ---------- App-style bottom tab bar (mobile) — expanding pill ---------- */
   .bottom-nav{display:none}
   @media(max-width:680px){
     .bottom-nav{
-      display:grid;grid-template-columns:repeat(5,1fr);align-items:end;
-      position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:70;
-      background:rgba(10,16,21,.72);backdrop-filter:blur(26px) saturate(1.7);
+      display:flex;align-items:center;justify-content:center;gap:4px;
+      position:fixed;left:50%;transform:translateX(-50%);
+      bottom:calc(12px + env(safe-area-inset-bottom));z-index:70;
+      max-width:calc(100% - 20px);
+      background:rgba(12,19,25,.72);backdrop-filter:blur(26px) saturate(1.7);
       -webkit-backdrop-filter:blur(26px) saturate(1.7);
-      border:1px solid rgba(255,255,255,.09);border-radius:22px;
-      padding:9px 8px;
+      border:1px solid rgba(255,255,255,.09);border-radius:999px;
+      padding:7px;
       box-shadow:0 18px 44px -16px rgba(0,0,0,.8),0 2px 10px -4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06);
     }
-    /* subtle teal hairline glow along the top edge */
-    .bottom-nav::after{
-      content:"";position:absolute;top:0;left:22%;right:22%;height:1px;border-radius:2px;
-      background:linear-gradient(90deg,transparent,var(--teal),transparent);opacity:.55;
-    }
     .bottom-nav a,.bottom-nav button{
-      -webkit-tap-highlight-color:transparent;position:relative;
+      -webkit-tap-highlight-color:transparent;
       background:none;border:none;cursor:pointer;text-decoration:none;
-      display:flex;flex-direction:column;align-items:center;gap:5px;
-      font-family:'Inter';font-size:10px;font-weight:500;letter-spacing:.01em;
-      color:var(--muted-2);padding:6px 2px 3px;transition:color .28s var(--ease);
+      display:flex;align-items:center;border-radius:999px;
+      font-family:'Inter';font-weight:600;font-size:13.5px;letter-spacing:.005em;
+      color:var(--muted-2);padding:11px;flex-shrink:0;
+      transition:color .3s var(--ease),background .3s var(--ease),padding .35s var(--ease);
     }
-    /* sliding pill behind the active icon */
-    .bottom-nav a:not(.bn-cta)::before,.bottom-nav button::before{
-      content:"";position:absolute;top:2px;left:50%;
-      width:50px;height:31px;border-radius:12px;
-      background:var(--teal-dim);border:1px solid rgba(24,214,196,.22);
-      transform:translateX(-50%) scale(.55);opacity:0;
-      transition:transform .34s var(--ease),opacity .28s var(--ease);
+    .bottom-nav svg{width:22px;height:22px;flex-shrink:0;transition:transform .24s var(--ease)}
+    .bottom-nav a:active svg,.bottom-nav button:active svg{transform:scale(.86)}
+    /* label collapses to nothing until the tab is active */
+    .bottom-nav span{
+      max-width:0;overflow:hidden;white-space:nowrap;opacity:0;margin-left:0;
+      transition:max-width .38s var(--ease),opacity .3s var(--ease),margin .38s var(--ease);
     }
-    .bottom-nav .active:not(.bn-cta)::before{transform:translateX(-50%) scale(1);opacity:1}
-    .bottom-nav svg{width:22px;height:22px;position:relative;z-index:1;transition:transform .24s var(--ease)}
-    .bottom-nav a:active svg,.bottom-nav button:active svg{transform:scale(.84)}
-    .bottom-nav .active{color:var(--teal);font-weight:600}
-    .bottom-nav .active svg{transform:translateY(-1px);filter:drop-shadow(0 0 7px rgba(24,214,196,.5))}
-    .bottom-nav .bn-cta{color:var(--teal)}
-    .bottom-nav .bn-cta .bn-ic{
-      display:grid;place-items:center;width:40px;height:40px;margin-top:-17px;
-      background:linear-gradient(150deg,var(--teal-bright),var(--teal));border-radius:14px;color:#04080b;
-      box-shadow:0 10px 24px -6px rgba(24,214,196,.75),0 0 0 5px rgba(24,214,196,.08),inset 0 1px 0 rgba(255,255,255,.35);
-      transition:transform .24s var(--ease),box-shadow .24s var(--ease);
+    .bottom-nav .active{
+      background:linear-gradient(150deg,var(--teal-bright),var(--teal));color:#04120f;
+      padding:11px 17px;
+      box-shadow:0 8px 20px -6px rgba(24,214,196,.6),inset 0 1px 0 rgba(255,255,255,.35);
     }
-    .bottom-nav .bn-cta:active .bn-ic{transform:scale(.92)}
-    .bottom-nav .bn-cta .bn-ic svg{width:20px;height:20px}
+    .bottom-nav .active span{max-width:96px;opacity:1;margin-left:8px}
   }
   :root[data-theme="light"] .bottom-nav{
-    background:rgba(255,255,255,.78);border-color:rgba(2,40,38,.1);
-    box-shadow:0 18px 40px -16px rgba(2,40,38,.28),0 2px 10px -4px rgba(2,40,38,.12),inset 0 1px 0 rgba(255,255,255,.7);
+    background:rgba(248,244,236,.9);border-color:rgba(2,40,38,.08);
+    box-shadow:0 18px 40px -16px rgba(2,40,38,.28),0 2px 10px -4px rgba(2,40,38,.12),inset 0 1px 0 rgba(255,255,255,.8);
   }
-  :root[data-theme="light"] .bottom-nav .bn-cta .bn-ic{color:#f7faf9}
 
   /* ---------- Theme toggle ---------- */
   .theme-btn{
@@ -745,13 +733,13 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 21 8l-9 5-9-5 9-5Z"/><path d="M3 12l9 5 9-5"/><path d="M3 16l9 5 9-5"/></svg>
     <span>Platform</span>
   </a>
-  <a href="#cta" class="bn-cta" aria-label="Get started">
-    <span class="bn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-    <span>Start</span>
-  </a>
   <a href="#services" data-spy="#services" aria-label="Solutions">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"/></svg>
     <span>Solutions</span>
+  </a>
+  <a href="#reviews" data-spy="#reviews" aria-label="Reviews">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.6 5.27 5.82.85-4.21 4.1.99 5.79L12 16.77l-5.2 2.74.99-5.79-4.21-4.1 5.82-.85L12 3.5Z"/></svg>
+    <span>Reviews</span>
   </a>
   <button type="button" id="bnMenu" aria-label="Open menu">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
